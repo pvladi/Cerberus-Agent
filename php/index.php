@@ -1,0 +1,1 @@
+<?php echo 'Cerberus Agent Config UI (coming soon)'; ?>

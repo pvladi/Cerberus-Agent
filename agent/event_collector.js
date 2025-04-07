@@ -1,0 +1,1 @@
+// Placeholder: Event collector script

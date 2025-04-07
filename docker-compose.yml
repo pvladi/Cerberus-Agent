@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  agent:
+    build: .
+    container_name: site-agent
+    volumes:
+      - ./config:/config
+      - ./telegraf/telegraf.conf:/config/telegraf.conf
+    ports:
+      - "514:514/udp"
+      - "162:162/udp"
+      - "8080:80"
+
+  telegraf:
+    image: telegraf:latest
+    container_name: telegraf
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - influxdb
+
+  influxdb:
+    image: influxdb:2
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=adminpass
+      - DOCKER_INFLUXDB_INIT_ORG=your-org
+      - DOCKER_INFLUXDB_INIT_BUCKET=snmp
+
+volumes:
+  influxdb_data:
